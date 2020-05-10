@@ -1,27 +1,37 @@
-﻿using UnityEngine;
+﻿using System;
+using Quiver.Slime;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
+  [Header("Dependencies")]
+  public CameraFollow cameraPrefab;
+  public ParticleSystem die_PS;
+
+  [Header("Jump Config")]
   public float speed;
   public float maxDistanceAllowJump;
   public LayerMask mask;
 
-  public ParticleSystem die_PS;
-  public Platform currentPlatform;
-
-  private bool isDie;
-  private Rigidbody2D rb2D;
-  private Transform cacheTransform;
 
   [Header("Event")]
   public UnityEvent onDie;
+
+  private bool isDie;
+  internal Platform currentPlatform;
+  private CameraFollow currentCamera;
+  private Rigidbody2D rb2D;
+  private Transform cacheTransform;
+  private PlatformBuilder platformBuilder;
 
   public bool IsDie => isDie;
 
   private void Awake()
   {
     rb2D = GetComponent<Rigidbody2D>();
+    currentCamera = Instantiate(cameraPrefab);
+    currentCamera.Player = this;
   }
 
   public void Jump()
@@ -33,17 +43,41 @@ public class Player : MonoBehaviour
     }
   }
 
+  internal void SetPlatformBuilder(PlatformBuilder platformBuilder)
+  {
+    this.platformBuilder = platformBuilder;
+    currentPlatform = platformBuilder.Peek();
+    platformBuilder.Manager.onPlayerArrived.AddListener(OnPlatformArrived);
+  }
+
+  private void OnPlatformArrived(Platform platform)
+  {
+    currentPlatform = platform;
+  }
+
+  internal void ReceiveInput(InputManager inputManager)
+  {
+    inputManager.onAction += Jump;
+  }
+
   private bool CanJump(out RaycastHit2D hit)
   {
     hit = Physics2D.Raycast(GetTransform().position, Vector2.down, maxDistanceAllowJump, mask);
     return hit.collider != null;
   }
 
+  public void SetLocalPosition(Vector3 localPosition)
+  {
+    var transform = GetTransform();
+    var beforeWorldPosition = transform.position;
+    transform.localPosition = localPosition;
+    currentCamera.SetPlayerPosition(beforeWorldPosition, transform.position);
+  }
+
   public Transform GetTransform()
   {
     if (cacheTransform == null)
       cacheTransform = transform;
-
     return cacheTransform;
   }
 

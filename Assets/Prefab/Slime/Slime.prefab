@@ -421,13 +421,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437d1d0af3564fd4f89fc5d97eca2f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraPrefab: {fileID: 6175359129890469238, guid: 3dcbb0b82751b5141ba7bc88bd1737c0,
+    type: 3}
+  die_PS: {fileID: 2373705615320607180}
   speed: 5.3
   maxDistanceAllowJump: 0.6
   mask:
     serializedVersion: 2
     m_Bits: 256
-  die_PS: {fileID: 2373705615320607180}
-  currentPlatform: {fileID: 0}
   onDie:
     m_PersistentCalls:
       m_Calls:

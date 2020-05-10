@@ -1,43 +1,58 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+namespace Quiver.Slime
 {
-  public Player player;
-  private Transform cacheTransform;
-  public Platform Target { get; private set; }
-
-  private void Awake()
+  public class CameraFollow : MonoBehaviour
   {
-    var world = GameObject.FindGameObjectWithTag("World").GetComponent<World>();
-    world.onPlayerArrived.AddListener(SetTarget);
-  }
+    public float speed;
+    public Vector3 offset;
+    private Transform camTransform;
+    private Transform cacheTransform;
 
-  private void SetTarget(Platform platform)
-  {
-    Target = platform;
-  }
+    public Player Player { get; internal set; }
 
-  private void Update()
-  {
-    var transform = GetTransform();
-    var playerPosition = player.GetTransform().position;
-    transform.position = playerPosition;
-
-    if (Target == null) return;
-    var position = transform.position;
-    var targetHeight = Target.Position.y;
-    if (playerPosition.y < targetHeight)
+    private void Awake()
     {
-      position.y = targetHeight;
-      transform.position = position;
+      camTransform = Camera.main.transform;
     }
-  }
 
-  public Transform GetTransform()
-  {
-    if (cacheTransform == null)
-      cacheTransform = transform;
+    private void Update()
+    {
+      var transform = GetTransform();
+      var playerPosition = Player.GetTransform().position;
+      transform.position = playerPosition;
 
-    return cacheTransform;
+      var target = Player.currentPlatform;
+      var position = transform.position;
+      var targetHeight = target.Position.y;
+
+      if (playerPosition.y < targetHeight)
+      {
+        position.y = targetHeight;
+        transform.position = position;
+      }
+
+      var camPosition = camTransform.position;
+      var targetPosition = transform.position + offset;
+      camTransform.position = Vector3.Lerp(camPosition, targetPosition, Time.deltaTime * speed);
+    }
+
+    public Transform GetTransform()
+    {
+      if (cacheTransform == null)
+        cacheTransform = transform;
+
+      return cacheTransform;
+    }
+
+    internal void SetPlayerPosition(Vector3 before, Vector3 after)
+    {
+      var virtualOffset = camTransform.position - before;
+      var offset = transform.position - before;
+
+      transform.position = after + offset;
+      camTransform.position = after + virtualOffset;
+    }
   }
 }

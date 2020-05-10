@@ -1,44 +1,46 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class Platform : MonoBehaviour
+namespace Quiver.Slime
 {
-  public float size;
-  public bool playerArrived;
-  public PlatformEvent onPlayerArrived;
-  public PlatformEvent onResetValue;
-  public Vector3 Position => GetTransform().position;
-  private Transform cacheTransform;
-
-  public Vector3 GetDistance()
+  public class Platform : MonoBehaviour
   {
-    return new Vector3(0, size, 0);
-  }
+    public float size;
+    [SerializeField] private bool playerArrived;
+    private Transform cacheTransform;
+    private PlatformManager manager;
 
-  public void ResetValues()
-  {
-    playerArrived = false;
-    onResetValue.Invoke(this);
-    onResetValue.RemoveAllListeners();
-  }
+    public Vector3 Position { get => GetTransform().localPosition; set => GetTransform().localPosition = value; }
 
-  public Transform GetTransform()
-  {
-    if (cacheTransform == null)
-      cacheTransform = transform;
-
-    return cacheTransform;
-  }
-
-  private void OnTriggerEnter2D(Collider2D other)
-  {
-    if (!playerArrived && other.CompareTag("Player"))
+    public Vector3 GetDistance()
     {
-      playerArrived = true;
-      onPlayerArrived.Invoke(this);
+      return new Vector3(0, size, 0);
+    }
+
+    internal void Setup(PlatformManager manager)
+    {
+      this.manager = manager;
+      playerArrived = false;
+    }
+
+    public Transform GetTransform()
+    {
+      if (cacheTransform == null)
+        cacheTransform = transform;
+
+      return cacheTransform;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+      if (!playerArrived && other.CompareTag("Player"))
+      {
+        playerArrived = true;
+        manager.PlayerArrived(this);
+      }
     }
   }
-}
 
-[System.Serializable]
-public class PlatformEvent : UnityEvent<Platform> { }
+  [System.Serializable]
+  public class PlatformEvent : UnityEvent<Platform> { }
+}
