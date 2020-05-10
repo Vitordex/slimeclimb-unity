@@ -564,9 +564,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1500547681}
   - component: {fileID: 1500547685}
+  - component: {fileID: 1500547684}
   - component: {fileID: 1500547683}
   - component: {fileID: 1500547682}
-  - component: {fileID: 1500547684}
   - component: {fileID: 1500547686}
   m_Layer: 0
   m_Name: World

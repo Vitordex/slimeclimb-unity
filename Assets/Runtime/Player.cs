@@ -1,5 +1,4 @@
-﻿using System;
-using Quiver.Slime;
+﻿using Quiver.Slime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,6 +21,7 @@ public class Player : MonoBehaviour
   internal Platform currentPlatform;
   private CameraFollow currentCamera;
   private Rigidbody2D rb2D;
+  private PlayerStatus status;
   private Transform cacheTransform;
   private PlatformBuilder platformBuilder;
 
@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
   private void Awake()
   {
     rb2D = GetComponent<Rigidbody2D>();
+    status = GetComponent<PlayerStatus>();
     currentCamera = Instantiate(cameraPrefab);
     currentCamera.Player = this;
   }
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
 
   private void OnPlatformArrived(Platform platform)
   {
+    status.AddScore(platform.Score);
     currentPlatform = platform;
   }
 

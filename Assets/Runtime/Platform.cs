@@ -7,6 +7,7 @@ namespace Quiver.Slime
   {
     public float size;
     [SerializeField] private int score;
+    [SerializeField] private int weight;
     [SerializeField] private bool playerArrived;
     public UnityEvent onBackToPool;
     private Transform cacheTransform;
@@ -15,6 +16,7 @@ namespace Quiver.Slime
     public Vector3 Position => GetTransform().localPosition;
 
     public int Score => score;
+    public int Weight => weight;
 
     public Vector3 GetDistance()
     {

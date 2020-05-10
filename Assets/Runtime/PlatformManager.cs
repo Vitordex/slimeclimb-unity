@@ -19,9 +19,9 @@ namespace Quiver.Slime
       this.platformPrefab = platformPrefab;
     }
 
-    public Platform GetPlataform(int wight)
+    public Platform GetPlataform(int weight)
     {
-      var platform = (wight == 0) ? platformBegin : Instantiate(platformPrefab, GetTransform());
+      var platform = (weight == 0) ? platformBegin : Instantiate(platformPrefab, GetTransform());
       platform.Setup(this);
       return platform;
     }

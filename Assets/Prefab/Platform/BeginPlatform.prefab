@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1480403057894759832, guid: 8af585ff8400f3f479cb4cf6f1d35918,
         type: 3}
-      propertyPath: playerArrived
+      propertyPath: score
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1480403057894759833, guid: 8af585ff8400f3f479cb4cf6f1d35918,
@@ -26,11 +26,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1480403057894759834, guid: 8af585ff8400f3f479cb4cf6f1d35918,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1480403057894759838, guid: 8af585ff8400f3f479cb4cf6f1d35918,
         type: 3}

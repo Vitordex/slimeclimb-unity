@@ -53,7 +53,8 @@ namespace Quiver.Slime
         obstacle.Configure(platform);
       }
 
-      weight += platform.Score;
+      weight += platform.Weight;
+
       lastPlatform = platform;
       platforms.Enqueue(platform);
     }
