@@ -105,13 +105,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
+  score: 1
   playerArrived: 0
-  onPlayerArrived:
-    m_PersistentCalls:
-      m_Calls: []
-  onResetValue:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!251 &1480403057894759834
 PlatformEffector2D:
   m_ObjectHideFlags: 0

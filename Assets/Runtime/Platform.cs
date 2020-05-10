@@ -6,11 +6,15 @@ namespace Quiver.Slime
   public class Platform : MonoBehaviour
   {
     public float size;
+    [SerializeField] private int score;
     [SerializeField] private bool playerArrived;
+    public UnityEvent onBackToPool;
     private Transform cacheTransform;
     private PlatformManager manager;
 
-    public Vector3 Position { get => GetTransform().localPosition; set => GetTransform().localPosition = value; }
+    public Vector3 Position => GetTransform().localPosition;
+
+    public int Score => score;
 
     public Vector3 GetDistance()
     {
@@ -21,6 +25,18 @@ namespace Quiver.Slime
     {
       this.manager = manager;
       playerArrived = false;
+    }
+
+    public void SetPosition(Vector3 value)
+    {
+      GetTransform().localPosition = value;
+    }
+
+    public void BackToPool()
+    {
+      gameObject.SetActive(false);
+      onBackToPool.Invoke();
+      onBackToPool.RemoveAllListeners();
     }
 
     public Transform GetTransform()

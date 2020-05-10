@@ -1,3 +1,5 @@
+using System;
+using Quiver.Slime;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
@@ -8,12 +10,20 @@ public class Obstacle : MonoBehaviour
 
   public void RandomStatus()
   {
-    var speed = Random.Range(speedMultiplier.x, speedMultiplier.y);
-    animator.Play("Loop", 0, Random.Range(0f, 1f));
+    var speed = UnityEngine.Random.Range(speedMultiplier.x, speedMultiplier.y);
+    animator.Play("Loop", 0, UnityEngine.Random.Range(0f, 1f));
     animator.SetFloat("speedMultiplier", speed);
   }
 
-  public void ResetStatus()
+  internal void Configure(Platform platform)
+  {
+    var transform = GetTransform();
+    transform.parent = platform.GetTransform();
+    transform.localPosition = platform.GetDistance() / 2f;
+    platform.onBackToPool.AddListener(BackToPool);
+  }
+
+  internal void BackToPool()
   {
     Destroy(gameObject);
   }

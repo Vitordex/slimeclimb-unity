@@ -4,10 +4,14 @@ public class Obstacles : MonoBehaviour
 {
   public ObstacleManager[] obstaclesTypes;
 
-  public Obstacle GetRandomObstacle()
+  public bool GetObstacle(int weight, out Obstacle obstacle)
   {
+    obstacle = default;
+    if (weight == 0) return false;
+
     var manager = GetRandom();
-    return manager.GetObstacle();
+    obstacle = manager.GetObstacle();
+    return true;
   }
 
   private ObstacleManager GetRandom()

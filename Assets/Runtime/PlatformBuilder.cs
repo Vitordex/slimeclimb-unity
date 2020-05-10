@@ -3,19 +3,22 @@ using UnityEngine;
 
 namespace Quiver.Slime
 {
-  [RequireComponent(typeof(PlatformManager))]
+  [RequireComponent(typeof(PlatformManager), typeof(Obstacles))]
   public class PlatformBuilder : MonoBehaviour
   {
     public int maxPlatform;
     private Platform lastPlatform;
     private Queue<Platform> platforms;
+    private int weight;
 
     public PlatformManager Manager { get; private set; }
+    public Obstacles Obstacles { get; private set; }
 
     private void Awake()
     {
       platforms = new Queue<Platform>(maxPlatform);
       Manager = GetComponent<PlatformManager>();
+      Obstacles = GetComponent<Obstacles>();
       Manager.onPlayerArrived.AddListener((p) => AddPlatform());
     }
 
@@ -42,8 +45,15 @@ namespace Quiver.Slime
     private void AddPlatform()
     {
       var nextPosition = NextPosition();
-      var platform = Manager.GetPlataform();
-      platform.Position = nextPosition;
+      var platform = Manager.GetPlataform(weight);
+      platform.SetPosition(nextPosition);
+
+      if (Obstacles.GetObstacle(weight, out var obstacle))
+      {
+        obstacle.Configure(platform);
+      }
+
+      weight += platform.Score;
       lastPlatform = platform;
       platforms.Enqueue(platform);
     }
@@ -58,7 +68,7 @@ namespace Quiver.Slime
         if (lastPlatform != null)
           position = lastPlatform.Position + lastPlatform.GetDistance();
 
-        platform.Position = position;
+        platform.SetPosition(position);
         lastPlatform = platform;
       }
     }

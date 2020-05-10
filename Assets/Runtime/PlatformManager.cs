@@ -5,6 +5,7 @@ namespace Quiver.Slime
 {
   public class PlatformManager : MonoBehaviour
   {
+    [SerializeField] private Platform platformBegin;
     [SerializeField] private Platform platformPrefab;
     public PlatformEvent onPlayerArrived;
     private Transform cacheTransform;
@@ -18,9 +19,9 @@ namespace Quiver.Slime
       this.platformPrefab = platformPrefab;
     }
 
-    public Platform GetPlataform()
+    public Platform GetPlataform(int wight)
     {
-      var platform = Instantiate(platformPrefab, GetTransform());
+      var platform = (wight == 0) ? platformBegin : Instantiate(platformPrefab, GetTransform());
       platform.Setup(this);
       return platform;
     }
