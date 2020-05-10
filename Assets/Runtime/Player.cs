@@ -1,46 +1,38 @@
 ﻿using Quiver.Slime;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
   [Header("Dependencies")]
-  public CameraFollow cameraPrefab;
-  public ParticleSystem die_PS;
+  [SerializeField] private CameraFollow cameraPrefab;
 
   [Header("Jump Config")]
   public float speed;
   public float maxDistanceAllowJump;
   public LayerMask mask;
 
-
-  [Header("Event")]
-  public UnityEvent onDie;
-
-  private bool isDie;
   internal Platform currentPlatform;
-  private CameraFollow currentCamera;
-  private Rigidbody2D rb2D;
-  private PlayerStatus status;
-  private Transform cacheTransform;
+  internal CameraFollow currentCamera;
   private PlatformBuilder platformBuilder;
+  private Transform cacheTransform;
 
-  public bool IsDie => isDie;
+  public PlayerStatus Status { get; private set; }
+  public Rigidbody2D Rigidbody { get; private set; }
 
   private void Awake()
   {
-    rb2D = GetComponent<Rigidbody2D>();
-    status = GetComponent<PlayerStatus>();
+    Rigidbody = GetComponent<Rigidbody2D>();
+    Status = GetComponent<PlayerStatus>();
     currentCamera = Instantiate(cameraPrefab);
     currentCamera.Player = this;
   }
 
   public void Jump()
   {
-    if (!isDie && CanJump(out var hit))
+    if (!Status.IsDie && CanJump(out var hit))
     {
       GetTransform().position = currentPlatform.GetTransform().position;
-      rb2D.velocity = Vector2.up * speed * rb2D.gravityScale;
+      Rigidbody.velocity = Vector2.up * speed * Rigidbody.gravityScale;
     }
   }
 
@@ -53,7 +45,7 @@ public class Player : MonoBehaviour
 
   private void OnPlatformArrived(Platform platform)
   {
-    status.AddScore(platform.Score);
+    Status.AddScore(platform.Score);
     currentPlatform = platform;
   }
 
@@ -81,24 +73,6 @@ public class Player : MonoBehaviour
     if (cacheTransform == null)
       cacheTransform = transform;
     return cacheTransform;
-  }
-
-  private void OnTriggerEnter2D(Collider2D other)
-  {
-    if (isDie) return;
-    if (other.CompareTag("Damage"))
-    {
-      Die();
-    }
-  }
-
-  private void Die()
-  {
-    rb2D.bodyType = RigidbodyType2D.Static;
-    enabled = false;
-    isDie = true;
-    die_PS.Play();
-    onDie.Invoke();
   }
 
   private void OnDrawGizmos()

@@ -332,6 +332,7 @@ GameObject:
   - component: {fileID: 7093677790128649220}
   - component: {fileID: 3307794942225704739}
   - component: {fileID: 1170499174256896840}
+  - component: {fileID: -7589447660975858419}
   m_Layer: 9
   m_Name: Slime
   m_TagString: Player
@@ -423,26 +424,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 6175359129890469238, guid: 3dcbb0b82751b5141ba7bc88bd1737c0,
     type: 3}
-  die_PS: {fileID: 2373705615320607180}
   speed: 5.3
   maxDistanceAllowJump: 0.6
   mask:
     serializedVersion: 2
     m_Bits: 256
-  onDie:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6829226077390126695}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1170499174256896840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,6 +443,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentScore: 0
   scoreText: {fileID: 1069018543}
+  onDie:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2373705615320607180}
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6829226077390126695}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &-7589447660975858419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307794942225704738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2808c8d1467fc4c81c6dadad99c47a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8655445877313990146
 GameObject:
   m_ObjectHideFlags: 0
