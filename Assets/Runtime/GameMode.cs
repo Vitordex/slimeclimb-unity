@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Quiver.Slime
@@ -7,11 +6,12 @@ namespace Quiver.Slime
   public class GameMode : MonoBehaviour
   {
     public int maxPlatformBefore;
+    public float limiteHeight;
     public Player playerPrefab;
     public PlatformBuilder platformBuilder;
     private Player player;
     private InputManager inputManager;
-    public int currentPlatformBefore;
+    private int currentPlatformBefore;
 
     public Player Player => player;
 
@@ -22,33 +22,42 @@ namespace Quiver.Slime
 
     private void Start()
     {
-      platformBuilder.InitOrReset();
+      platformBuilder.Build();
       player = CreatePlayer();
       player.ReceiveInput(inputManager);
       player.SetPlatformBuilder(platformBuilder);
-
       platformBuilder.Manager.onPlayerArrived.AddListener(OnPlayerArrived);
+
+      inputManager.onAction += ResetGame;
     }
 
     private void OnPlayerArrived(Platform platform)
     {
       if (currentPlatformBefore >= maxPlatformBefore)
-      {
-        var firstPlatform = platformBuilder.GetPlatform();
-        Destroy(firstPlatform.gameObject);
-      }
+        platformBuilder.GetPlatform().BackToPool();
       else
-      {
         currentPlatformBefore++;
-      }
 
       var height = platform.Position.y;
-      if (height < 24) return;
+      if (height < limiteHeight) return;
 
       var playerTransform = player.GetTransform();
       var playerOffset = playerTransform.localPosition - platform.Position;
       platformBuilder.ResetHeight();
       player.SetLocalPosition(playerOffset + platform.Position);
+    }
+
+    private void ResetGame()
+    {
+      if (!player.Status.IsDie) return;
+
+      currentPlatformBefore = 0;
+      player.Status.ResetStatus();
+      player.GetTransform().position = Vector3.zero;
+
+      platformBuilder.difficulty = 0;
+      platformBuilder.Clear();
+      platformBuilder.Build();
     }
 
     private Player CreatePlayer()

@@ -1,4 +1,5 @@
-﻿using Quiver.Slime;
+﻿using System;
+using Quiver.Slime;
 using UnityEngine;
 
 public class Player : MonoBehaviour

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +8,9 @@ namespace Quiver.Slime
   public class PlatformBuilder : MonoBehaviour
   {
     public int maxPlatform;
+    public int difficulty;
     private Platform lastPlatform;
     private Queue<Platform> platforms;
-    private int weight;
 
     public PlatformManager Manager { get; private set; }
     public Obstacles Obstacles { get; private set; }
@@ -22,7 +23,7 @@ namespace Quiver.Slime
       Manager.onPlayerArrived.AddListener((p) => AddPlatform());
     }
 
-    public void InitOrReset()
+    public void Build()
     {
       for (int i = 0; i < maxPlatform; i++)
       {
@@ -45,16 +46,17 @@ namespace Quiver.Slime
     private void AddPlatform()
     {
       var nextPosition = NextPosition();
-      var platform = Manager.GetPlataform(weight);
+      var platform = Manager.GetPlataform(difficulty);
       platform.SetPosition(nextPosition);
 
-      if (Obstacles.GetObstacle(weight, out var obstacle))
+      if (Obstacles.GetObstacle(difficulty, out var obstacle))
       {
         obstacle.Configure(platform);
       }
 
-      weight += platform.Weight;
+      difficulty += platform.Weight;
 
+      platform.gameObject.SetActive(true);
       lastPlatform = platform;
       platforms.Enqueue(platform);
     }
@@ -72,6 +74,16 @@ namespace Quiver.Slime
         platform.SetPosition(position);
         lastPlatform = platform;
       }
+    }
+
+    internal void Clear()
+    {
+      while (platforms.Count > 0)
+      {
+        platforms.Dequeue().BackToPool();
+      }
+
+      lastPlatform = null;
     }
 
     private Vector3 NextPosition()
