@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
 
 namespace Quiver.Slime
 {
-  public class PlatformManager : MonoBehaviour
+  public class PlatformManager : PoolManager<Platform>
   {
     [SerializeField] private Platform platformBegin;
     [SerializeField] private Platform platformPrefab;
     public PlatformEvent onPlayerArrived;
-    private Transform cacheTransform;
 
     public PlatformManager()
     {
@@ -21,7 +19,7 @@ namespace Quiver.Slime
 
     public Platform GetPlataform(int weight)
     {
-      var platform = (weight == 0) ? platformBegin : Instantiate(platformPrefab, GetTransform());
+      var platform = (weight == 0) ? platformBegin : GetOrCreate();
       platform.Setup(this);
       return platform;
     }
@@ -29,13 +27,6 @@ namespace Quiver.Slime
     internal void PlayerArrived(Platform platform)
     {
       onPlayerArrived.Invoke(platform);
-    }
-
-    public Transform GetTransform()
-    {
-      if (cacheTransform == null)
-        cacheTransform = transform;
-      return cacheTransform;
     }
   }
 }

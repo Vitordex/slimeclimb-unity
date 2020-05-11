@@ -568,6 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlatform: 4
+  difficulty: 0
 --- !u!114 &1500547683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,6 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c2e48491290cd4cb0ae9f13ef0baab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 1480403057894759832, guid: 8af585ff8400f3f479cb4cf6f1d35918, type: 3}
   platformBegin: {fileID: 430812765}
   platformPrefab: {fileID: 1480403057894759832, guid: 8af585ff8400f3f479cb4cf6f1d35918,
     type: 3}
@@ -599,10 +601,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlatformBefore: 2
+  limiteHeight: 0
   playerPrefab: {fileID: 3307794942225704739, guid: a218613e30da2fb47a6efc6a550a3b24,
     type: 3}
   platformBuilder: {fileID: 1500547682}
-  currentPlatformBefore: 0
 --- !u!114 &1500547685
 MonoBehaviour:
   m_ObjectHideFlags: 0

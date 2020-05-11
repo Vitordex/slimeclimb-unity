@@ -34,7 +34,7 @@ namespace Quiver.Slime
     private void OnPlayerArrived(Platform platform)
     {
       if (currentPlatformBefore >= maxPlatformBefore)
-        platformBuilder.GetPlatform().BackToPool();
+        platformBuilder.GetPlatform().OnAddPool();
       else
         currentPlatformBefore++;
 

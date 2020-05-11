@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace Quiver.Slime
 {
-  public class Platform : MonoBehaviour
+  public class Platform : MonoBehaviour, IPoolObject<Platform>
   {
     public float size;
     [SerializeField] private int score;
@@ -13,10 +13,10 @@ namespace Quiver.Slime
     private Transform cacheTransform;
     private PlatformManager manager;
 
-    public Vector3 Position => GetTransform().localPosition;
-
     public int Score => score;
     public int Weight => weight;
+    public Vector3 Position => GetTransform().localPosition;
+    public PoolManager<Platform> PoolManager { get; set; }
 
     public Vector3 GetDistance()
     {
@@ -35,6 +35,18 @@ namespace Quiver.Slime
     }
 
     public void BackToPool()
+    {
+      if (PoolManager != null)
+      {
+        PoolManager.Add(this);
+      }
+      else
+      {
+        OnAddPool();
+      }
+    }
+
+    public void OnAddPool()
     {
       gameObject.SetActive(false);
       onBackToPool.Invoke();

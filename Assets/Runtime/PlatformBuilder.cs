@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -80,7 +79,7 @@ namespace Quiver.Slime
     {
       while (platforms.Count > 0)
       {
-        platforms.Dequeue().BackToPool();
+        platforms.Dequeue().OnAddPool();
       }
 
       lastPlatform = null;
