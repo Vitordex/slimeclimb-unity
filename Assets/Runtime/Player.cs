@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
   [Header("Jump Config")]
   public float speed;
+  public float offsetDistanceJump;
   public float maxDistanceAllowJump;
   public LayerMask mask;
 
@@ -68,7 +69,7 @@ public class Player : MonoBehaviour
 
   private bool CanJump(out RaycastHit2D hit)
   {
-    hit = Physics2D.Raycast(GetTransform().position, Vector2.down, maxDistanceAllowJump, mask);
+    hit = Physics2D.Raycast(GetTransform().position + new Vector3(0, offsetDistanceJump, 0), Vector2.down, maxDistanceAllowJump, mask);
     return hit.collider != null;
   }
 
@@ -93,15 +94,16 @@ public class Player : MonoBehaviour
   {
     var transform = GetTransform();
 
+    var start = transform.position + new Vector3(0, offsetDistanceJump, 0);
     if (CanJump(out var hit))
     {
       Gizmos.color = Color.red;
-      Gizmos.DrawLine(transform.position, hit.point);
+      Gizmos.DrawLine(start, hit.point);
     }
     else
     {
       Gizmos.color = Color.green;
-      Gizmos.DrawLine(transform.position, transform.position + Vector3.down * maxDistanceAllowJump);
+      Gizmos.DrawLine(start, start + Vector3.down * maxDistanceAllowJump);
     }
   }
 }
