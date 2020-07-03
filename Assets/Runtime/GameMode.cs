@@ -1,29 +1,45 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Quiver.Slime
 {
   [RequireComponent(typeof(InputManager))]
   public class GameMode : MonoBehaviour
   {
+    public static GameMode Current;
+    public Vector3 startCameraPosition;
     public int maxPlatformBefore;
     public float limiteHeight;
     public Player playerPrefab;
+    public CameraFollow cameraPrefab;
     public PlatformBuilder platformBuilder;
+
+    public UnityEvent onReset;
+
     private Player player;
+    private CameraFollow cam;
     private InputManager inputManager;
     private int currentPlatformBefore;
 
     public Player Player => player;
+    public InputManager InputManager => inputManager;
 
     private void Awake()
     {
+      if (Current == null)
+      {
+        Current = this;
+      }
+
       inputManager = GetComponent<InputManager>();
+      player = CreatePlayer();
+      cam = Instantiate(cameraPrefab, startCameraPosition, Quaternion.identity);
+      cam.Player = player;
     }
 
     private void Start()
     {
       platformBuilder.Build();
-      player = CreatePlayer();
       player.ReceiveInput(inputManager);
       player.SetPlatformBuilder(platformBuilder);
       platformBuilder.Manager.onPlayerArrived.AddListener(OnPlayerArrived);
@@ -34,7 +50,7 @@ namespace Quiver.Slime
     private void OnPlayerArrived(Platform platform)
     {
       if (currentPlatformBefore >= maxPlatformBefore)
-        platformBuilder.GetPlatform().OnAddPool();
+        platformBuilder.GetPlatform().BackToPool();
       else
         currentPlatformBefore++;
 
@@ -52,12 +68,15 @@ namespace Quiver.Slime
       if (!player.Status.IsDie) return;
 
       currentPlatformBefore = 0;
-      player.Status.ResetStatus();
-      player.GetTransform().position = Vector3.zero;
+      platformBuilder.ResetGame();
+      var begin = platformBuilder.Peek();
 
-      platformBuilder.difficulty = 0;
-      platformBuilder.Clear();
-      platformBuilder.Build();
+      player.currentPlatform = begin;
+      var startPosition = begin.GetTransform().position;
+      player.GetTransform().position = startPosition;
+      cam.ResetPosition(startPosition);
+      player.Status.ResetStatus();
+      onReset.Invoke();
     }
 
     private Player CreatePlayer()

@@ -4,23 +4,28 @@ namespace Quiver.Slime
 {
   public class PlatformManager : PoolManager<Platform>
   {
+    [SerializeField] private PlatformConfig platformConfig;
     [SerializeField] private Platform platformBegin;
-    [SerializeField] private Platform platformPrefab;
     public PlatformEvent onPlayerArrived;
 
-    public PlatformManager()
+    protected override void Awake()
     {
+      base.Awake();
+      platformBegin.Setup(this);
     }
 
-    public PlatformManager(Platform platformPrefab) : this()
+    public Platform GetPlataform(uint weight)
     {
-      this.platformPrefab = platformPrefab;
-    }
+      if (weight == 0)
+      {
+        return platformBegin;
+      }
 
-    public Platform GetPlataform(int weight)
-    {
-      var platform = (weight == 0) ? platformBegin : GetOrCreate();
+      var platform = GetOrCreate();
+      platformConfig.FindColor(weight, out var color, out var delay);
       platform.Setup(this);
+      platform.SetColor(color);
+      platform.SetDelayFall(delay);
       return platform;
     }
 

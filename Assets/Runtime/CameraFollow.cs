@@ -50,9 +50,18 @@ namespace Quiver.Slime
     {
       var virtualOffset = camTransform.position - before;
       var offset = transform.position - before;
+    }
 
-      transform.position = after + offset;
-      camTransform.position = after + virtualOffset;
+    public void SetPosition(Vector3 position)
+    {
+      transform.position = position;
+      camTransform.position = position;
+    }
+
+    public void ResetPosition(Vector3 position)
+    {
+      transform.position = position + offset;
+      camTransform.position = position + offset;
     }
   }
 }

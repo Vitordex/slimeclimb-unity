@@ -1,13 +1,11 @@
-using UnityEngine;
+using Quiver.Slime;
 
-public class ObstacleManager : MonoBehaviour
+public class ObstacleManager : PoolManager<Obstacle>
 {
-  public Obstacle obstaclePrefab;
-
-  public Obstacle GetObstacle()
+  public Obstacle GetObstacle(uint weight)
   {
-    var obstacle = Instantiate(obstaclePrefab);
-    obstacle.RandomStatus();
+    var obstacle = GetOrCreate();
+    obstacle.StartAnimation(weight);
     return obstacle;
   }
 }

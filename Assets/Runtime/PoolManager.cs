@@ -9,7 +9,7 @@ namespace Quiver.Slime
     protected Queue<T> pool;
     private Transform cacheTransform;
 
-    private void Awake()
+    protected virtual void Awake()
     {
       pool = new Queue<T>();
     }
@@ -18,6 +18,7 @@ namespace Quiver.Slime
     {
       var poolObject = (pool.Count > 0) ? pool.Dequeue() : Instantiate(prefab, GetTransform());
       poolObject.PoolManager = this;
+      poolObject.ResetObject();
       return poolObject;
     }
 
@@ -39,6 +40,7 @@ namespace Quiver.Slime
   {
     PoolManager<T> PoolManager { get; set; }
     void BackToPool();
+    void ResetObject();
     void OnAddPool();
   }
 }

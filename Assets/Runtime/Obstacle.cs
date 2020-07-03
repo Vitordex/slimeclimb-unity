@@ -1,31 +1,24 @@
-using System;
 using Quiver.Slime;
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour, IPoolObject<Obstacle>
 {
-  private Transform cacheTransform;
-  public Vector2 speedMultiplier;
   public Animator animator;
+  private Transform cacheTransform;
 
-  public void RandomStatus()
-  {
-    var speed = UnityEngine.Random.Range(speedMultiplier.x, speedMultiplier.y);
-    animator.Play("Loop", 0, UnityEngine.Random.Range(0f, 1f));
-    animator.SetFloat("speedMultiplier", speed);
-  }
+  public PoolManager<Obstacle> PoolManager { get; set; }
 
   internal void Configure(Platform platform)
   {
+    platform.Obstacle = this;
     var transform = GetTransform();
     transform.parent = platform.GetTransform();
     transform.localPosition = platform.GetDistance() / 2f;
-    platform.onBackToPool.AddListener(BackToPool);
   }
 
-  internal void BackToPool()
+  public void StartAnimation(uint weight)
   {
-    Destroy(gameObject);
+    animator.Play("Loop");
   }
 
   public Transform GetTransform()
@@ -34,5 +27,22 @@ public class Obstacle : MonoBehaviour
       cacheTransform = transform;
 
     return cacheTransform;
+  }
+
+  public void BackToPool()
+  {
+    PoolManager.Add(this);
+    var transform = GetTransform();
+    transform.parent = PoolManager.GetTransform();
+  }
+
+  public void ResetObject()
+  {
+    gameObject.SetActive(true);
+  }
+
+  public void OnAddPool()
+  {
+    gameObject.SetActive(false);
   }
 }

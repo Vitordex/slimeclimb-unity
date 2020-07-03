@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Quiver.Slime
@@ -6,32 +7,81 @@ namespace Quiver.Slime
   public class Platform : MonoBehaviour, IPoolObject<Platform>
   {
     public float size;
+
+    [Header("Score")]
     [SerializeField] private int score;
-    [SerializeField] private int weight;
+    [SerializeField] private uint weight;
     [SerializeField] private bool playerArrived;
-    public UnityEvent onBackToPool;
+
+    [Header("Fall")]
+    [SerializeField] private bool isFall;
+    [SerializeField] private float delayToFall;
+
     private Transform cacheTransform;
     private PlatformManager manager;
+    private Material material;
 
     public int Score => score;
-    public int Weight => weight;
+    public uint Weight => weight;
     public Vector3 Position => GetTransform().localPosition;
     public PoolManager<Platform> PoolManager { get; set; }
+    public Obstacle Obstacle { get; set; }
+
+    private void Awake()
+    {
+      material = GetComponentInChildren<Renderer>().material;
+    }
+
+    internal void Setup(PlatformManager manager)
+    {
+      this.manager = manager;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+      if (!playerArrived && other.CompareTag("Player"))
+      {
+        playerArrived = true;
+        manager.PlayerArrived(this);
+
+        if (isFall)
+          StartCoroutine(Fall(delayToFall));
+      }
+    }
+
+    private IEnumerator Fall(float delay)
+    {
+      yield return new WaitForSeconds(delay);
+      BackToPool();
+    }
+
+    public void SetDelayFall(float delay)
+    {
+      isFall = delay != 0;
+      delayToFall = delay;
+    }
+
+    public void SetColor(Color color)
+    {
+      material.SetColor("_Color", color);
+    }
+
+    public void SetPosition(Vector3 value)
+    {
+      GetTransform().localPosition = value;
+    }
 
     public Vector3 GetDistance()
     {
       return new Vector3(0, size, 0);
     }
 
-    internal void Setup(PlatformManager manager)
+    public Transform GetTransform()
     {
-      this.manager = manager;
-      playerArrived = false;
-    }
+      if (cacheTransform == null)
+        cacheTransform = transform;
 
-    public void SetPosition(Vector3 value)
-    {
-      GetTransform().localPosition = value;
+      return cacheTransform;
     }
 
     public void BackToPool()
@@ -48,26 +98,14 @@ namespace Quiver.Slime
 
     public void OnAddPool()
     {
+      Obstacle?.BackToPool();
+      Obstacle = null;
       gameObject.SetActive(false);
-      onBackToPool.Invoke();
-      onBackToPool.RemoveAllListeners();
     }
 
-    public Transform GetTransform()
+    public void ResetObject()
     {
-      if (cacheTransform == null)
-        cacheTransform = transform;
-
-      return cacheTransform;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-      if (!playerArrived && other.CompareTag("Player"))
-      {
-        playerArrived = true;
-        manager.PlayerArrived(this);
-      }
+      playerArrived = false;
     }
   }
 

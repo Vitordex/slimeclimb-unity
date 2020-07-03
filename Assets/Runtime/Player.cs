@@ -1,21 +1,21 @@
-﻿using System;
-using Quiver.Slime;
+﻿using Quiver.Slime;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-  [Header("Dependencies")]
-  [SerializeField] private CameraFollow cameraPrefab;
-
   [Header("Jump Config")]
   public float speed;
   public float maxDistanceAllowJump;
   public LayerMask mask;
 
   internal Platform currentPlatform;
-  internal CameraFollow currentCamera;
   private PlatformBuilder platformBuilder;
   private Transform cacheTransform;
+
+  public delegate void UpdatePosition(Vector3 before, Vector3 after);
+  public UpdatePosition onUpdatePosition;
+  public UpdatePosition onUpdateLocalPosition;
+  private Vector3 lastPosition;
 
   public PlayerStatus Status { get; private set; }
   public Rigidbody2D Rigidbody { get; private set; }
@@ -24,8 +24,19 @@ public class Player : MonoBehaviour
   {
     Rigidbody = GetComponent<Rigidbody2D>();
     Status = GetComponent<PlayerStatus>();
-    currentCamera = Instantiate(cameraPrefab);
-    currentCamera.Player = this;
+    lastPosition = GetTransform().position;
+  }
+
+  private void LateUpdate()
+  {
+    var transform = GetTransform();
+    var currentPosition = transform.position;
+
+    if (lastPosition != currentPosition)
+    {
+      onUpdatePosition?.Invoke(lastPosition, currentPosition);
+      lastPosition = currentPosition;
+    }
   }
 
   public void Jump()
@@ -64,9 +75,11 @@ public class Player : MonoBehaviour
   public void SetLocalPosition(Vector3 localPosition)
   {
     var transform = GetTransform();
+    var beforeLocalPosition = transform.localPosition;
     var beforeWorldPosition = transform.position;
     transform.localPosition = localPosition;
-    currentCamera.SetPlayerPosition(beforeWorldPosition, transform.position);
+    onUpdateLocalPosition?.Invoke(beforeLocalPosition, localPosition);
+    lastPosition = transform.position;
   }
 
   public Transform GetTransform()

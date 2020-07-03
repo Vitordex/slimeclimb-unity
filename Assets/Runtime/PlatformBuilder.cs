@@ -7,7 +7,7 @@ namespace Quiver.Slime
   public class PlatformBuilder : MonoBehaviour
   {
     public int maxPlatform;
-    public int difficulty;
+    public uint difficulty;
     private Platform lastPlatform;
     private Queue<Platform> platforms;
 
@@ -54,9 +54,8 @@ namespace Quiver.Slime
       }
 
       difficulty += platform.Weight;
-
-      platform.gameObject.SetActive(true);
       lastPlatform = platform;
+      platform.gameObject.SetActive(true);
       platforms.Enqueue(platform);
     }
 
@@ -79,10 +78,17 @@ namespace Quiver.Slime
     {
       while (platforms.Count > 0)
       {
-        platforms.Dequeue().OnAddPool();
+        platforms.Dequeue().BackToPool();
       }
 
       lastPlatform = null;
+    }
+
+    public void ResetGame()
+    {
+      difficulty = 0;
+      Clear();
+      Build();
     }
 
     private Vector3 NextPosition()
