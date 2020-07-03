@@ -24,6 +24,13 @@ public class Cheat : MonoBehaviour
     playerTrigger.isInvulnerable = !playerTrigger.isInvulnerable;
   }
 
+  public void PlayerDie()
+  {
+    var playerStatus = GameMode.Current
+    .Player.GetComponent<PlayerStatus>();
+    playerStatus.Die();
+  }
+
   public void ToggleShow()
   {
     isShow = !isShow;
