@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 1480403057894759832}
   - component: {fileID: 1480403057894759834}
   - component: {fileID: 1480403057894759833}
+  - component: {fileID: 956224938070929501}
   m_Layer: 8
   m_Name: Platform
   m_TagString: Untagged
@@ -108,9 +109,8 @@ MonoBehaviour:
   score: 1
   weight: 1
   playerArrived: 0
-  onBackToPool:
-    m_PersistentCalls:
-      m_Calls: []
+  isFall: 0
+  delayToFall: 0
 --- !u!251 &1480403057894759834
 PlatformEffector2D:
   m_ObjectHideFlags: 0
@@ -156,6 +156,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.8208222, y: 0.5667167}
   m_EdgeRadius: 0
+--- !u!95 &956224938070929501
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480403057894759838}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7e60046d87d732d4baad54ff88e7cf86, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1480403056927794537
 PrefabInstance:
   m_ObjectHideFlags: 0

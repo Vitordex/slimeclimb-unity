@@ -19,16 +19,20 @@ namespace Quiver.Slime
 
     private Transform cacheTransform;
     private PlatformManager manager;
+
+
     private Material material;
 
     public int Score => score;
     public uint Weight => weight;
     public Vector3 Position => GetTransform().localPosition;
     public PoolManager<Platform> PoolManager { get; set; }
+    public Animator Animator { get; private set; }
     public Obstacle Obstacle { get; set; }
 
     private void Awake()
     {
+      Animator = GetComponent<Animator>();
       material = GetComponentInChildren<Renderer>().material;
     }
 
@@ -52,7 +56,7 @@ namespace Quiver.Slime
     private IEnumerator Fall(float delay)
     {
       yield return new WaitForSeconds(delay);
-      BackToPool();
+      Animator.Play("Fall");
     }
 
     public void SetDelayFall(float delay)
@@ -86,6 +90,8 @@ namespace Quiver.Slime
 
     public void BackToPool()
     {
+      StopAllCoroutines();
+
       if (PoolManager != null)
       {
         PoolManager.Add(this);
@@ -106,6 +112,7 @@ namespace Quiver.Slime
     public void ResetObject()
     {
       playerArrived = false;
+      gameObject.SetActive(true);
     }
   }
 
