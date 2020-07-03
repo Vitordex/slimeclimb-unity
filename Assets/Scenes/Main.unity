@@ -1006,7 +1006,7 @@ MonoBehaviour:
   configs:
   - weight: 0
     probabilities:
-    - obstacle: {fileID: 130456544}
+    - obstacle: {fileID: 2026930165}
       probability: 100
   - weight: 1
     probabilities:
@@ -1022,6 +1022,32 @@ MonoBehaviour:
       probability: 36
     - obstacle: {fileID: 130456544}
       probability: 28
+  - weight: 26
+    probabilities:
+    - obstacle: {fileID: 2026930165}
+      probability: 33
+    - obstacle: {fileID: 1328787827}
+      probability: 33
+    - obstacle: {fileID: 130456544}
+      probability: 34
+  - weight: 36
+    probabilities:
+    - obstacle: {fileID: 2026930165}
+      probability: 20
+    - obstacle: {fileID: 1328787827}
+      probability: 35
+    - obstacle: {fileID: 130456544}
+      probability: 45
+  - weight: 51
+    probabilities:
+    - obstacle: {fileID: 2026930165}
+      probability: 15
+    - obstacle: {fileID: 1328787827}
+      probability: 22
+    - obstacle: {fileID: 44842312}
+      probability: 31
+    - obstacle: {fileID: 130456544}
+      probability: 32
 --- !u!1 &1617467962
 GameObject:
   m_ObjectHideFlags: 0
